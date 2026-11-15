@@ -9,6 +9,10 @@ A Chrome extension for viewing atomic structure files (`.xyz`, `.extxyz`, `.pdb`
 
 ## Install
 
+**From the Chrome Web Store:** coming soon (the listing is under review; the link will be added here).
+
+**From source:**
+
 1. Clone this repository.
 2. Open `chrome://extensions` in Chrome and turn on **Developer mode** (top right).
 3. Click **Load unpacked** and select the `extension/` folder of the clone.
@@ -52,16 +56,19 @@ A bond is drawn when at least one of the two atoms is a non-metal and their dist
 
 ## Permissions
 
-- `contextMenus`, `scripting`, `activeTab`: the right-click menu, and injecting the panel into the tab you clicked. Nothing runs on a page until you use the menu, the toolbar button or the shortcut.
+- `activeTab`, `scripting`, `contextMenus`: the right-click menu, and injecting the panel into the tab you invoked it on. Nothing runs on a page until you use the menu, the toolbar button or the shortcut.
 - `storage`: remembers the panel position and size and your display settings.
-- `<all_urls>` host permission: a fallback for fetching files from sites that don't send CORS headers. On GitHub, the page-side fetch is enough and this path isn't used.
+
+There are no host permissions, so installing it shows no "read and change all your data on all websites" warning. Files are fetched by the page itself (which is how private GitHub repositories work), so a file on another site can be opened only if that site allows cross-origin requests (raw.githubusercontent.com does). Files on the same site as the page, like GitHub or GitLab file pages, always work.
+
+Privacy policy: [PRIVACY.md](PRIVACY.md). In short, nothing is collected or sent anywhere.
 
 ## Development
 
 ```
 extension/
   manifest.json      MV3 manifest
-  background.js      context menu, panel injection, CORS-free fallback fetch
+  background.js      context menu, panel injection, fallback fetch
   content.js         in-page panel (Shadow DOM + iframe) and file fetching
   viewer/            the viewer (viewer.html / viewer.js / parsers.js / elements.js / viewer.css)
   vendor/three/      three.js r187 (MIT) and TrackballControls
@@ -71,10 +78,13 @@ tests/
   e2e.mjs            node tests/e2e.mjs extension tests            (headless Chrome, throwaway profile)
   *.xyz, *.cif, ...  small fixtures
 tools/
-  make_icons.py      python3 tools/make_icons.py extension/icons   (needs Pillow)
+  make_icons.py      python3 tools/make_icons.py extension/icons store/icon-512.png   (needs Pillow)
+  store_assets.mjs   node tools/store_assets.mjs     (Web Store screenshots + promo tile into store/)
+  package.sh         sh tools/package.sh             (dist/atom-viewer-<version>.zip for upload)
+store/               Web Store images and listing text (listing.md)
 ```
 
-`tests/e2e.mjs` loads the unpacked extension into a temporary headless Chrome profile through the DevTools protocol (`Extensions.loadUnpacked`). It opens public GitHub pages, runs the same code path as the context menu, and checks the panel, the viewer, docking, selection, PNG export and reloading the extension. It never touches your normal Chrome profile.
+`tests/e2e.mjs` loads the unpacked extension into a temporary headless Chrome profile through the DevTools protocol (`Extensions.loadUnpacked`). DevTools can't produce the user gesture that grants `activeTab`, so the test loads a temporary copy with host permission added. It opens public GitHub pages, runs the same code path as the context menu, and checks the panel, the viewer, docking, selection, PNG export and reloading the extension. It never touches your normal Chrome profile.
 
 The viewer page also works on its own. Serve the repository root over HTTP and open `extension/viewer/viewer.html?src=/tests/rutile.cif`, or drop a file onto it.
 
@@ -88,3 +98,8 @@ The viewer page also works on its own. Serve the repository root over HTTP and o
 
 - [three.js](https://threejs.org/) (MIT), vendored in `extension/vendor/three/`
 - Jmol element colours; covalent radii from Cordero et al., *Dalton Trans.* 2008 (the same set ASE uses)
+- Screenshots use sample files from [janosh/matterviz](https://github.com/janosh/matterviz) (MIT)
+
+## License
+
+[MIT](LICENSE)

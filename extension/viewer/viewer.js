@@ -1099,4 +1099,11 @@ if (params.get('src') && location.protocol.startsWith('http')) {
 }
 
 // for debugging from DevTools
-window.atomViewer = { loadBytes, get data() { return data; }, setFrame, viewAlong, resetView, capturePNG, scene };
+window.atomViewer = {
+  loadBytes, get data() { return data; }, setFrame, viewAlong, resetView, capturePNG, scene,
+  // select atoms by index in the current frame (unit cell image), e.g. atomViewer.select([0, 1, 2])
+  select(indices) {
+    selection = indices.map((src) => ({ src, img: [0, 0, 0] }));
+    updateSelection();
+  },
+};

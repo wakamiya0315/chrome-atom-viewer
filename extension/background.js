@@ -60,8 +60,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 // Toolbar button and Alt+Shift+V: try the current page whatever its URL looks like.
 chrome.action.onClicked.addListener((tab) => openPanel(tab, { url: tab.url }));
 
-// Fallback fetch for content.js: runs with the extension's host permission, so it is not
-// blocked by CORS on hosts that serve files without CORS headers.
+// Fallback fetch for content.js. The extension has no standing host permissions; this works
+// for the tab's own origin (granted temporarily by activeTab when the user invokes the
+// extension) and for hosts that allow CORS.
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg?.type !== 'sv:bgfetch' || sender.id !== chrome.runtime.id || !sender.tab) return;
   (async () => {

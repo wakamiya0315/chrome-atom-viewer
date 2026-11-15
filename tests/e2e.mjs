@@ -1,13 +1,25 @@
 // End-to-end check: load the unpacked extension into a throwaway headless Chrome profile,
 // open a public GitHub blob page, run the same openPanel() the context menu uses, and
 // inspect the injected panel + viewer iframe.
+//
+// The extension itself has no host permissions: it relies on activeTab, which Chrome grants
+// only on a real user gesture (context-menu click, toolbar button, shortcut). DevTools cannot
+// produce that gesture, so the test loads a temporary copy whose manifest also has
+// host_permissions <all_urls>. Everything else is the shipped code.
 import { spawn } from 'node:child_process';
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, rmSync, cpSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const EXT = resolve(process.argv[2]);
+const SRC_EXT = resolve(process.argv[2]);
+const EXT = mkdtempSync(join(tmpdir(), 'av-ext-'));
+cpSync(SRC_EXT, EXT, { recursive: true });
+{
+  const manifest = JSON.parse(readFileSync(join(EXT, 'manifest.json'), 'utf8'));
+  manifest.host_permissions = ['<all_urls>'];
+  writeFileSync(join(EXT, 'manifest.json'), JSON.stringify(manifest, null, 2));
+}
 const OUT = resolve(process.argv[3] || '.');
 const PORT = 9333;
 const profile = mkdtempSync(join(tmpdir(), 'sv-e2e-'));
@@ -181,4 +193,5 @@ try {
   proc.kill('SIGTERM');
   await sleep(800);
   rmSync(profile, { recursive: true, force: true });
+  rmSync(EXT, { recursive: true, force: true });
 }

@@ -3,3 +3,4 @@ node_modules/
 tests/e2e-*.png
 tests/icon-preview.png
 .claude/
+dist/

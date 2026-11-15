@@ -1,0 +1,86 @@
+# Chrome Web Store listing — Atom Viewer
+
+Text and answers used in the Chrome Web Store developer dashboard. Images are in this folder; regenerate them with `node tools/store_assets.mjs`. Build the upload with `tools/package.sh`.
+
+## Store listing
+
+**Name:** Atom Viewer (from the manifest)
+
+**Summary** (from the manifest `description`, ≤132 characters):
+
+> View .xyz, .extxyz, .pdb, .cif and POSCAR files from GitHub or any web page as 3D atomic structures, right in the page.
+
+**Category:** Developer Tools
+
+**Language:** English
+
+**Description:**
+
+```
+Atom Viewer shows atomic structure files from GitHub and other web pages in 3D without downloading them. Right-click a structure file page or a link to one, choose "View in Atom Viewer", and a viewer panel opens on the right or at the bottom of the page.
+
+WORKS WITH PRIVATE REPOSITORIES
+The file is fetched with your existing browser session for that site, so files in private GitHub repositories that you can already open will work. Nothing is sent to any outside service.
+
+SUPPORTED FORMATS
+• XYZ and extended XYZ (.xyz, .extxyz) — Lattice, Properties, pbc, multiple frames
+• VASP: POSCAR, CONTCAR, XDATCAR (.vasp)
+• CIF and mmCIF (symmetry operations expanded), PDB
+• XSF, MOL/SDF, and gzip-compressed versions of all of the above
+
+VIEWER
+• Rotate, zoom and pan; orthographic (default) or perspective projection; views along a, b and c
+• Click atoms to measure distances, angles and dihedrals; hover to see coordinates and per-atom extxyz properties (tags, forces, …)
+• Bonds from covalent radii, unit cell, wrapping into the cell, and supercells whose cell lines follow the repetition
+• Trajectories with a frame slider and playback
+• Show or hide elements from the legend
+• Save the view as a PNG with a transparent background
+• Dock the panel right or bottom, resize it, or go full screen
+
+HOW TO OPEN IT
+• Right-click a file page → View in Atom Viewer
+• Right-click a link to a structure file → View linked file in Atom Viewer
+• Select pasted XYZ/POSCAR text → View selected text in Atom Viewer
+• Toolbar button or Alt+Shift+V on the current page
+
+PRIVACY
+No data collection, no analytics, no remote code. The extension only acts on the tab where you invoke it (activeTab). Your display settings are stored locally.
+
+Open source (MIT): https://github.com/wakamiya0315/chrome-atom-viewer
+```
+
+**Images:**
+
+| Field | File |
+|---|---|
+| Store icon (128×128) | `extension/icons/icon128.png` |
+| Screenshots (1280×800) | `screenshot-1-right-panel.png`, `screenshot-2-measure.png`, `screenshot-3-trajectory.png` |
+| Small promo tile (440×280) | `promo-small-440x280.png` |
+
+**Homepage URL:** https://github.com/wakamiya0315/chrome-atom-viewer
+**Support URL:** https://github.com/wakamiya0315/chrome-atom-viewer/issues
+
+## Privacy practices
+
+**Single purpose:**
+
+> Display atomic structure files (such as .xyz, .extxyz, .pdb, .cif and POSCAR) that the user selects on a web page as an interactive 3D model in a panel on that page.
+
+**Permission justifications:**
+
+- **activeTab:** Gives temporary access to the tab where the user chooses "View in Atom Viewer" (context menu, toolbar button or keyboard shortcut), so the extension can add its viewer panel to that page and read the structure file the user selected. No access to other tabs or to pages the user has not invoked it on.
+- **scripting:** Injects the viewer panel (content script) into the active tab, only after the user invokes the extension.
+- **contextMenus:** Adds the "View in Atom Viewer", "View linked file in Atom Viewer" and "View selected text in Atom Viewer" items to the right-click menu.
+- **storage:** Saves the user's display preferences (atom size, background, panel position and size) locally with chrome.storage.local.
+
+**Remote code:** No, I am not using remote code. All JavaScript, including three.js, is packaged in the extension.
+
+**Data usage:** The extension does not collect or transmit any user data. Structure files are downloaded only when the user asks to view them and are processed locally in the browser. No checkboxes ticked under "What user data do you plan to collect".
+
+**Privacy policy URL:** https://github.com/wakamiya0315/chrome-atom-viewer/blob/main/PRIVACY.md
+
+## Distribution
+
+- **Visibility:** Unlisted (only people with the link can find and install it)
+- **Regions:** All regions
+- **Payment:** Free

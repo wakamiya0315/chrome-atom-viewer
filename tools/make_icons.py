@@ -1,7 +1,7 @@
 """Draw the Atom Viewer icon: a water molecule seen side-on (ball-and-stick, H-O-H = 104.5 deg).
 
-Usage: python3 tools/make_icons.py extension/icons
-Writes icon16/32/48/128.png.
+Usage: python3 tools/make_icons.py extension/icons [store/icon-512.png]
+Writes icon16/32/48/128.png, and optionally a 512 px copy (used for the store promo tile).
 """
 
 import math
@@ -54,6 +54,13 @@ for h in hs:
     ball(h, r_h, base=(226, 230, 238), shadow=(150, 158, 172), highlight=(255, 255, 255))
 ball(o, r_o, base=(232, 52, 44), shadow=(150, 22, 18), highlight=(255, 170, 160))
 
-for size in (16, 32, 48, 128):
+for size in (16, 32, 48):
     img.resize((size, size), Image.LANCZOS).save(f"{out}/icon{size}.png")
+
+# 128 px: Chrome Web Store guideline is 96x96 artwork with 16 px of transparent padding per side
+icon128 = Image.new("RGBA", (128, 128), (0, 0, 0, 0))
+icon128.alpha_composite(img.resize((96, 96), Image.LANCZOS), (16, 16))
+icon128.save(f"{out}/icon128.png")
+if len(sys.argv) > 2:
+    img.resize((512, 512), Image.LANCZOS).save(sys.argv[2])
 print("wrote", out)

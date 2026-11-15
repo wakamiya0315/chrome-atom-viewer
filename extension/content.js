@@ -247,7 +247,7 @@
         errors.push(`${shortUrl(c)}: ${e.message || e}`);
       }
     }
-    // 2) from the extension (no CORS restriction)
+    // 2) from the extension's service worker (activeTab origin)
     for (const c of urls) {
       try {
         const r = await chrome.runtime.sendMessage({ type: 'sv:bgfetch', url: c });
