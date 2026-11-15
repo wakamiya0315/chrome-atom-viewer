@@ -70,7 +70,7 @@ A bond is drawn when at least one of the two atoms is a non-metal and their dist
 
 There are no host permissions, so installing it shows no "read and change all your data on all websites" warning. Files are fetched by the page itself (which is how private GitHub repositories work), so a file on another site can be opened only if that site allows cross-origin requests (raw.githubusercontent.com does). Files on the same site as the page, like GitHub or GitLab file pages, always work.
 
-Privacy policy: [PRIVACY.md](PRIVACY.md). In short, nothing is collected or sent anywhere.
+Privacy policy: [PRIVACY.md](PRIVACY.md). In short, the file you choose is processed inside your browser and nothing is sent anywhere.
 
 ## Development
 

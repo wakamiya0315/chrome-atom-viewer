@@ -46,7 +46,7 @@ HOW TO OPEN IT
 • Toolbar button or Alt+Shift+V on the current page
 
 PRIVACY
-No data collection, no analytics, no remote code. The extension only acts on the tab where you invoke it (activeTab). Your display settings are stored locally.
+The structure file you choose is read and drawn inside your browser; nothing is sent to the developer or anyone else. No analytics, no remote code. The extension only acts on the tab where you invoke it (activeTab), and your display settings are stored locally.
 
 Open source (MIT): https://github.com/wakamiya0315/chrome-atom-viewer
 ```
@@ -77,12 +77,25 @@ Open source (MIT): https://github.com/wakamiya0315/chrome-atom-viewer
 
 **Remote code:** No, I am not using remote code. All JavaScript, including three.js, is packaged in the extension.
 
-**Data usage:** The extension does not collect or transmit any user data. Structure files are downloaded only when the user asks to view them and are processed locally in the browser. No checkboxes ticked under "What user data do you plan to collect".
+**Data usage:** Tick only **Website content**. Google's user-data FAQ asks for disclosure even when data is only processed locally, and the extension reads the structure file or selected text that the user asks it to show. It is processed in the browser and never transmitted. Tick all three certifications (no selling or transfer, no unrelated use, no creditworthiness or lending use).
 
 **Privacy policy URL:** https://github.com/wakamiya0315/chrome-atom-viewer/blob/main/PRIVACY.md
 
 ## Distribution
 
+- **Payment:** Free (no in-app purchases)
 - **Visibility:** Public
 - **Regions:** All regions
-- **Payment:** Free
+
+## Test instructions
+
+- **Username / password:** leave empty (no account needed)
+- **Additional instructions:**
+
+```
+No account or login is needed.
+1. Open https://github.com/wakamiya0315/chrome-atom-viewer/blob/main/tests/rutile.cif
+2. Right-click on the page and choose "View in Atom Viewer". A 3D viewer opens on the right.
+3. Open https://github.com/wakamiya0315/chrome-atom-viewer/tree/main/tests/samples, right-click the md_au_pt111.extxyz link and choose "View linked file in Atom Viewer" to see a trajectory.
+The toolbar button or Alt+Shift+V also opens the current page.
+```

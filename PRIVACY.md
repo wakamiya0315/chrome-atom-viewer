@@ -6,7 +6,7 @@ Atom Viewer is a Chrome extension that displays atomic structure files (such as 
 
 ## Summary
 
-Atom Viewer does **not** collect, store on any server, sell, or share any personal or sensitive data. It has no analytics, no tracking, no advertising and no account. It does not send anything to the developer or to any third party.
+Atom Viewer handles one kind of user data: the **website content** you explicitly ask it to show (a structure file, or text you selected). It handles it only inside your browser. Nothing is transmitted to the developer or to any third party, and nothing is sold, shared or stored on a server. The extension has no analytics, no tracking, no advertising and no account. It does not handle personal, financial, health, authentication, location or browsing-history data.
 
 ## What the extension accesses, and why
 
