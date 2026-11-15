@@ -18,35 +18,28 @@ Text and answers used in the Chrome Web Store developer dashboard. Images are in
 
 **Description:**
 
+> **2026-11-15:** the first submission was rejected for "keyword spam" (Yellow Argon). The reviewer flagged the bulleted list of file formats in the description, so the description now names the formats once, in prose. Avoid keyword-style lists of formats or extensions in store text.
+
+
 ```
-Atom Viewer shows atomic structure files from GitHub and other web pages in 3D without downloading them. Right-click a structure file page or a link to one, choose "View in Atom Viewer", and a viewer panel opens on the right or at the bottom of the page.
+Atom Viewer lets you look at atomic structure files in 3D directly on GitHub and other web pages, without downloading them. Right-click a file page or a link to a file, choose "View in Atom Viewer", and an interactive viewer opens in a panel on the right or at the bottom of the page.
 
-WORKS WITH PRIVATE REPOSITORIES
-The file is fetched with your existing browser session for that site, so files in private GitHub repositories that you can already open will work. Nothing is sent to any outside service.
+It is made for computational chemistry and materials science and reads the structure formats common in those fields, such as extended XYZ, VASP structure files, CIF and PDB, including trajectories and gzip-compressed files.
 
-SUPPORTED FORMATS
-• XYZ and extended XYZ (.xyz, .extxyz) — Lattice, Properties, pbc, multiple frames
-• VASP: POSCAR, CONTCAR, XDATCAR (.vasp)
-• CIF and mmCIF (symmetry operations expanded), PDB
-• XSF, MOL/SDF, and gzip-compressed versions of all of the above
+It also works with private repositories: the file is fetched with your existing browser session for that site, so files in private GitHub repositories that you can already open will work.
 
-VIEWER
-• Rotate, zoom and pan; orthographic (default) or perspective projection; views along a, b and c
-• Click atoms to measure distances, angles and dihedrals; hover to see coordinates and per-atom extxyz properties (tags, forces, …)
-• Bonds from covalent radii, unit cell, wrapping into the cell, and supercells whose cell lines follow the repetition
-• Trajectories with a frame slider and playback
-• Show or hide elements from the legend
-• Save the view as a PNG with a transparent background
-• Dock the panel right or bottom, resize it, or go full screen
+In the viewer you can:
+• rotate, zoom and pan, in orthographic or perspective projection, or look along each lattice vector
+• click atoms to measure distances, angles and dihedrals, and hover to see coordinates and per-atom properties
+• show bonds, the unit cell and supercells, and wrap atoms into the cell
+• play back trajectories frame by frame
+• hide or show individual elements
+• save the current view as a PNG with a transparent background
+• dock the panel on the right or at the bottom, resize it, or switch to full screen
 
-HOW TO OPEN IT
-• Right-click a file page → View in Atom Viewer
-• Right-click a link to a structure file → View linked file in Atom Viewer
-• Select pasted XYZ/POSCAR text → View selected text in Atom Viewer
-• Toolbar button or Alt+Shift+V on the current page
+You can open the viewer from the right-click menu on a page, a link or selected text, from the toolbar button, or with Alt+Shift+V.
 
-PRIVACY
-The structure file you choose is read and drawn inside your browser; nothing is sent to the developer or anyone else. No analytics, no remote code. The extension only acts on the tab where you invoke it (activeTab), and your display settings are stored locally.
+Privacy: the file you choose is read and drawn inside your browser and is never sent to the developer or anyone else. There are no analytics and no remote code, and the extension only acts on the tab where you use it.
 
 Open source (MIT): https://github.com/wakamiya0315/chrome-atom-viewer
 ```
