@@ -1,0 +1,10 @@
+3
+water frame 0
+O 0 0 0
+H 0.957 0 0
+H -0.24 0.927 0
+3
+Properties=species:S:1:pos:R:3:forces:R:3 energy=-14.2 pbc="F F F"
+O 0 0 0.1 0 0 0.01
+H 0.957 0 0.1 0.1 0 0
+H -0.24 0.927 0.1 0 0.1 0
