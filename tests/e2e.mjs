@@ -86,11 +86,11 @@ try {
   console.log('context menus:', await evaluate(swSession, `Promise.all(['sv-link','sv-page','sv-selection'].map(id =>
     chrome.contextMenus.update(id, {}).then(() => id + ':ok', e => id + ':MISSING ' + e.message))).then(r => r.join(' '))`));
   const scenarios = [
-    { name: 'blob-page', page: 'https://github.com/janosh/matterviz/blob/main/src/site/structures/TiO2.cif', open: 'tab.url' },
-    { name: 'link-raw', page: 'https://github.com/janosh/matterviz/tree/main/src/site/molecules',
-      open: JSON.stringify('https://raw.githubusercontent.com/janosh/matterviz/main/src/site/molecules/cyclohexane.xyz') },
-    { name: 'link-blob-pdb', page: 'https://github.com/janosh/matterviz/tree/main/src/site/molecules',
-      open: JSON.stringify('https://github.com/janosh/matterviz/blob/main/src/site/molecules/glycine.pdb') },
+    { name: 'blob-page', page: 'https://github.com/wakamiya0315/chrome-atom-viewer/blob/main/tests/rutile.cif', open: 'tab.url' },
+    { name: 'link-raw', page: 'https://github.com/wakamiya0315/chrome-atom-viewer/tree/main/tests',
+      open: JSON.stringify('https://raw.githubusercontent.com/wakamiya0315/chrome-atom-viewer/main/tests/traj.xyz') },
+    { name: 'link-blob-pdb', page: 'https://github.com/wakamiya0315/chrome-atom-viewer/tree/main/tests',
+      open: JSON.stringify('https://github.com/wakamiya0315/chrome-atom-viewer/blob/main/tests/water.pdb') },
   ];
   for (const sc of scenarios) {
     const { targetId } = await send('Target.createTarget', { url: sc.page });
@@ -146,7 +146,7 @@ try {
 
   // ---- PNG button inside the docked iframe, then extension reload with the tab left open
   {
-    const page = 'https://github.com/janosh/matterviz/blob/main/src/site/structures/TiO2.cif';
+    const page = 'https://github.com/wakamiya0315/chrome-atom-viewer/blob/main/tests/rutile.cif';
     const dl = mkdtempSync(join(tmpdir(), 'sv-dl-'));
     await send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: dl, eventsEnabled: true });
     const { targetId } = await send('Target.createTarget', { url: page });

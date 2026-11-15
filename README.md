@@ -77,8 +77,10 @@ tests/
   parse_check.mjs    node tests/parse_check.mjs tests/rutile.cif   (prints what the parser read)
   e2e.mjs            node tests/e2e.mjs extension tests            (headless Chrome, throwaway profile)
   *.xyz, *.cif, ...  small fixtures
+  samples/           larger showcase structures (Au38 on MgO(001), Au/Pt(111) MD trajectory)
 tools/
   make_icons.py      python3 tools/make_icons.py extension/icons store/icon-512.png   (needs Pillow)
+  make_samples.py    uv run --with ase python tools/make_samples.py   (regenerates tests/samples/)
   store_assets.mjs   node tools/store_assets.mjs     (Web Store screenshots + promo tile into store/)
   package.sh         sh tools/package.sh             (dist/atom-viewer-<version>.zip for upload)
 store/               Web Store images and listing text (listing.md)
@@ -98,7 +100,7 @@ The viewer page also works on its own. Serve the repository root over HTTP and o
 
 - [three.js](https://threejs.org/) (MIT), vendored in `extension/vendor/three/`
 - Jmol element colours; covalent radii from Cordero et al., *Dalton Trans.* 2008 (the same set ASE uses)
-- Screenshots use sample files from [janosh/matterviz](https://github.com/janosh/matterviz) (MIT)
+- Screenshots show this repository's own test structures; the showcase samples in `tests/samples/` are generated from scratch with [ASE](https://wiki.fysik.dtu.dk/ase/) by `tools/make_samples.py`
 
 ## License
 
