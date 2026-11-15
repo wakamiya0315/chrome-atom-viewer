@@ -1,5 +1,7 @@
 # Chrome Web Store listing — Atom Viewer
 
+Item ID: `ldbcmecdchmhcjgboaagbiofojnjemhn` · Store page (after approval): https://chromewebstore.google.com/detail/ldbcmecdchmhcjgboaagbiofojnjemhn
+
 Text and answers used in the Chrome Web Store developer dashboard. Images are in this folder; regenerate them with `node tools/store_assets.mjs`. Build the upload with `tools/package.sh`.
 
 ## Store listing
@@ -81,6 +83,6 @@ Open source (MIT): https://github.com/wakamiya0315/chrome-atom-viewer
 
 ## Distribution
 
-- **Visibility:** Unlisted (only people with the link can find and install it)
+- **Visibility:** Public
 - **Regions:** All regions
 - **Payment:** Free

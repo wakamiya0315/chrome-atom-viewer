@@ -4,12 +4,21 @@
 
 A Chrome extension for viewing atomic structure files (`.xyz`, `.extxyz`, `.pdb`, `.cif`, `POSCAR`, …) on GitHub or any other web page in 3D, without downloading them. Right-click a file page or a link, and a viewer panel opens on the right or at the bottom of the page.
 
+<p align="center">
+  <img src="store/screenshot-1-right-panel.png" width="100%" alt="Atom Viewer docked on the right of a GitHub file page, showing an Au38 nanoparticle on MgO(001)">
+</p>
+<p align="center">
+  <img src="store/screenshot-2-measure.png" width="49%" alt="Rutile TiO2 2x2x3 supercell with an O–Ti–O angle measured">
+  <img src="store/screenshot-3-trajectory.png" width="49%" alt="Au adatoms on Pt(111): an MD trajectory in the bottom panel with a frame slider">
+</p>
+<p align="center"><sub>Left to right: Au₃₈ on MgO(001) · rutile 2×2×3 with an O–Ti–O angle · an Au/Pt(111) MD trajectory in the bottom panel. All three are files in <code>tests/</code>.</sub></p>
+
 - **Works with private repositories.** The file is fetched with the page's own GitHub session (`github.com/<owner>/<repo>/raw/...`), so anything you can open in the browser can be viewed. Nothing is sent to an outside service.
 - **No build step.** The code is plain ES modules with three.js vendored. After an edit, reload the extension on `chrome://extensions` and the change is live.
 
 ## Install
 
-**From the Chrome Web Store:** coming soon (the listing is under review; the link will be added here).
+**From the Chrome Web Store:** [Atom Viewer](https://chromewebstore.google.com/detail/ldbcmecdchmhcjgboaagbiofojnjemhn). It is awaiting review, so the link works only once the listing is approved.
 
 **From source:**
 
