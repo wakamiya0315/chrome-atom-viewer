@@ -1,0 +1,4 @@
+2
+Lattice="3.0 0.0 0.0 1.5 2.598076 0.0 0.0 0.0 12.0" Properties=species:S:1:pos:R:3 pbc="T T F"
+Pt 0.0 0.0 5.0
+O 1.5 0.866 6.2

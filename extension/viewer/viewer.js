@@ -20,9 +20,12 @@ if (embedded) document.body.classList.add('embedded');
 
 const DEFAULTS = {
   atomScale: 0.5, showBonds: true, metalBonds: false, bondTol: 1.1, bondRadius: 0.13,
-  showCell: true, wrap: false, na: 1, nb: 1, nc: 1, light: false, ortho: false,
+  showCell: true, wrap: false, na: 1, nb: 1, nc: 1, light: false, ortho: true,
 };
 const PERSISTED = ['atomScale', 'showBonds', 'metalBonds', 'bondTol', 'bondRadius', 'showCell', 'light', 'ortho'];
+// v2: orthographic became the default, so an `ortho` value saved by v1 (where every save
+// wrote ortho=false unless toggled) is not carried over.
+const SETTINGS_VERSION = 2;
 const settings = { ...DEFAULTS };
 const hasChromeStorage = typeof chrome !== 'undefined' && chrome.storage?.local;
 
@@ -31,13 +34,18 @@ async function loadSettings() {
     const saved = hasChromeStorage
       ? (await chrome.storage.local.get('svSettings')).svSettings
       : JSON.parse(localStorage.getItem('svSettings') || 'null');
-    if (saved) for (const k of PERSISTED) if (k in saved) settings[k] = saved[k];
+    if (saved) {
+      for (const k of PERSISTED) {
+        if (k === 'ortho' && saved.v !== SETTINGS_VERSION) continue;
+        if (k in saved) settings[k] = saved[k];
+      }
+    }
   } catch {
     /* defaults */
   }
 }
 function saveSettings() {
-  const out = Object.fromEntries(PERSISTED.map((k) => [k, settings[k]]));
+  const out = { v: SETTINGS_VERSION, ...Object.fromEntries(PERSISTED.map((k) => [k, settings[k]])) };
   try {
     if (hasChromeStorage) chrome.storage.local.set({ svSettings: out });
     else localStorage.setItem('svSettings', JSON.stringify(out));
@@ -48,7 +56,9 @@ function saveSettings() {
 
 // ------------------------------------------------------------------ three.js setup
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+// alpha: true so PNG exports can have a transparent background (on screen, scene.background
+// is always an opaque colour, so nothing changes visually).
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.domElement.tabIndex = 0;
 stage.prepend(renderer.domElement);
@@ -72,6 +82,8 @@ const atomMat = new THREE.MeshStandardMaterial({ roughness: 0.38, metalness: 0.0
 const bondMat = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.0 });
 const selMat = new THREE.MeshBasicMaterial({ color: 0xffcf33, transparent: true, opacity: 0.38, depthWrite: false });
 const cellMat = new THREE.LineBasicMaterial({ color: 0x9aa3b2 });
+// boundaries between unit cells inside a supercell: same colour, fainter
+const cellInnerMat = new THREE.LineBasicMaterial({ color: 0x9aa3b2, transparent: true, opacity: 0.35, depthWrite: false });
 
 const sphereGeos = {};
 function sphereGeo(count) {
@@ -312,27 +324,50 @@ function updateBonds() {
   requestRender();
 }
 
+// Corners of the displayed cell box: the whole supercell when the structure is repeated.
+function cellCorners(f) {
+  const [a, b, c] = f.cell.map((v) => new THREE.Vector3(...v));
+  const [na, nb, nc] = supercellReps(f);
+  const out = [];
+  for (let i = 0; i < 8; i++) {
+    out.push(new THREE.Vector3().addScaledVector(a, (i & 1) * na).addScaledVector(b, ((i >> 1) & 1) * nb).addScaledVector(c, ((i >> 2) & 1) * nc));
+  }
+  return out;
+}
+
+// Cell lines follow the supercell: the outer na×nb×nc box is drawn solid and the
+// boundaries between the repeated unit cells are drawn fainter.
 function updateCell() {
   if (cellLines) {
     scene.remove(cellLines);
-    cellLines.geometry.dispose();
+    cellLines.traverse((o) => o.geometry?.dispose());
     cellLines = null;
   }
   const f = data && frame();
   if (!f || !f.cell || !settings.showCell) return requestRender();
-  const [a, b, c] = f.cell.map((v) => new THREE.Vector3(...v));
-  const o = new THREE.Vector3();
-  const P = (i, j, k) => o.clone().addScaledVector(a, i).addScaledVector(b, j).addScaledVector(c, k);
-  const edges = [];
-  for (const [p, q] of [
-    [[0, 0, 0], [1, 0, 0]], [[0, 0, 0], [0, 1, 0]], [[0, 0, 0], [0, 0, 1]],
-    [[1, 0, 0], [1, 1, 0]], [[1, 0, 0], [1, 0, 1]], [[0, 1, 0], [1, 1, 0]],
-    [[0, 1, 0], [0, 1, 1]], [[0, 0, 1], [1, 0, 1]], [[0, 0, 1], [0, 1, 1]],
-    [[1, 1, 0], [1, 1, 1]], [[1, 0, 1], [1, 1, 1]], [[0, 1, 1], [1, 1, 1]],
-  ]) {
-    edges.push(P(...p), P(...q));
+  const vec = f.cell.map((v) => new THREE.Vector3(...v));
+  const n = supercellReps(f);
+  const P = (p) => new THREE.Vector3().addScaledVector(vec[0], p[0]).addScaledVector(vec[1], p[1]).addScaledVector(vec[2], p[2]);
+  const outer = [];
+  const inner = [];
+  // lines parallel to axis `ax` through every lattice node of the other two axes
+  for (let ax = 0; ax < 3; ax++) {
+    const [u, w] = [0, 1, 2].filter((k) => k !== ax);
+    for (let i = 0; i <= n[u]; i++) {
+      for (let j = 0; j <= n[w]; j++) {
+        const p = [0, 0, 0];
+        p[u] = i;
+        p[w] = j;
+        const q = [...p];
+        q[ax] = n[ax];
+        const isOuter = (i === 0 || i === n[u]) && (j === 0 || j === n[w]);
+        (isOuter ? outer : inner).push(P(p), P(q));
+      }
+    }
   }
-  cellLines = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(edges), cellMat);
+  cellLines = new THREE.Group();
+  cellLines.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(outer), cellMat));
+  if (inner.length) cellLines.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(inner), cellInnerMat));
   scene.add(cellLines);
   requestRender();
 }
@@ -507,10 +542,7 @@ function bounds() {
   }
   const f = data && frame();
   if (f && f.cell && settings.showCell) {
-    const [a, b, c] = f.cell.map((v) => new THREE.Vector3(...v));
-    for (let i = 0; i < 8; i++) {
-      box.expandByPoint(new THREE.Vector3().addScaledVector(a, i & 1).addScaledVector(b, (i >> 1) & 1).addScaledVector(c, (i >> 2) & 1));
-    }
+    for (const p of cellCorners(f)) box.expandByPoint(p);
   }
   if (box.isEmpty()) box.set(new THREE.Vector3(-5, -5, -5), new THREE.Vector3(5, 5, 5));
   const sphere = box.getBoundingSphere(new THREE.Sphere());
@@ -528,12 +560,7 @@ function boundPoints() {
     for (let i = 0; i < d.count; i++) pad = Math.max(pad, atomRadius(d.z[i]));
   }
   const f = data && frame();
-  if (f && f.cell && settings.showCell) {
-    const [a, b, c] = f.cell.map((v) => new THREE.Vector3(...v));
-    for (let i = 0; i < 8; i++) {
-      pts.push(new THREE.Vector3().addScaledVector(a, i & 1).addScaledVector(b, (i >> 1) & 1).addScaledVector(c, (i >> 2) & 1));
-    }
-  }
+  if (f && f.cell && settings.showCell) pts.push(...cellCorners(f));
   if (!pts.length) pts.push(new THREE.Vector3(-5, -5, -5), new THREE.Vector3(5, 5, 5));
   return { pts, pad };
 }
@@ -693,6 +720,7 @@ function applyTheme() {
   document.body.classList.toggle('dark', !settings.light);
   scene.background = new THREE.Color(settings.light ? 0xffffff : 0x16181d);
   cellMat.color.set(settings.light ? 0x4a5160 : 0x9aa3b2);
+  cellInnerMat.color.copy(cellMat.color);
   requestRender();
 }
 
@@ -897,7 +925,7 @@ function resetSettings() {
   syncForm();
   syncSupercellInputs();
   applyTheme();
-  setOrtho(false);
+  setOrtho(DEFAULTS.ortho);
   if (data) refreshFrame({ refit: supercellChanged });
 }
 form.addEventListener('submit', (e) => e.preventDefault());
@@ -935,16 +963,26 @@ $('btn-ortho').addEventListener('click', () => {
   setOrtho(!settings.ortho);
   saveSettings();
 });
-$('btn-shot').addEventListener('click', () => {
+// PNG of the current view with a transparent background. The frame is rendered without
+// scene.background and read back synchronously, then the on-screen background is restored.
+function capturePNG() {
+  const bg = scene.background;
+  scene.background = null;
+  renderer.setClearColor(0x000000, 0);
   render();
-  renderer.domElement.toBlob((blob) => {
-    if (!blob) return;
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${(fileName || 'structure').replace(/\.(gz)$/i, '').replace(/\.[^.]+$/, '')}.png`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
-  }, 'image/png');
+  const blob = new Promise((resolve) => renderer.domElement.toBlob(resolve, 'image/png'));
+  scene.background = bg;
+  requestRender();
+  return blob;
+}
+$('btn-shot').addEventListener('click', async () => {
+  const blob = await capturePNG();
+  if (!blob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${(fileName || 'structure').replace(/\.(gz)$/i, '').replace(/\.[^.]+$/, '')}.png`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
 });
 
 function setPlayIcon() {
@@ -1061,4 +1099,4 @@ if (params.get('src') && location.protocol.startsWith('http')) {
 }
 
 // for debugging from DevTools
-window.atomViewer = { loadBytes, get data() { return data; }, setFrame, viewAlong, resetView };
+window.atomViewer = { loadBytes, get data() { return data; }, setFrame, viewAlong, resetView, capturePNG, scene };

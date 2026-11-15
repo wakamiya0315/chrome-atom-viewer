@@ -31,8 +31,8 @@ On a Mac, right-click is a two-finger click.
 
 - **Mouse**: drag to rotate, scroll to zoom, right-drag to pan. Double-click an atom to make it the rotation center.
 - **Selecting atoms**: click to select. With 2 atoms selected you get the distance, with 3 the angle, with 4 the dihedral. Hovering shows the coordinates and any per-atom extxyz properties (tags, forces, move_mask, …).
-- **Header buttons**: reset view (`R`), view along `a` / `b` / `c`, `Ortho` for orthographic projection (`O`), and save as PNG.
-- **Settings (slider icon)**: atom size, bonds (on/off, cutoff, thickness, metal–metal), unit cell, wrapping atoms into the cell, supercell (periodic directions only), and light background. **Reset settings** restores all of these to their defaults.
+- **Header buttons**: reset view (`R`), view along `a` / `b` / `c`, `Ortho` to switch between orthographic (the default) and perspective projection (`O`), and save as PNG. The PNG has a transparent background, so it can go straight onto slides or figures.
+- **Settings (slider icon)**: atom size, bonds (on/off, cutoff, thickness, metal–metal), unit cell, wrapping atoms into the cell, supercell (periodic directions only; the cell lines follow it, with the outer box solid and the unit-cell boundaries faint), and light background. **Reset settings** restores all of these to their defaults.
 - **Legend**: click an element to hide or show it.
 - **Trajectories** (multi-frame xyz/extxyz, XDATCAR, PDB `MODEL`s): use the slider and ▶ at the bottom, or `Space` and `←` / `→`.
 - **Panel**: drag its edge to resize. Header buttons dock it right or bottom, make it full screen, or close it.
