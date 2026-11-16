@@ -1,6 +1,6 @@
 # Chrome Web Store listing — Atom Viewer
 
-Item ID: `ldbcmecdchmhcjgboaagbiofojnjemhn` · Store page (after approval): https://chromewebstore.google.com/detail/ldbcmecdchmhcjgboaagbiofojnjemhn
+Item ID: `ldbcmecdchmhcjgboaagbiofojnjemhn` · Store page: https://chromewebstore.google.com/detail/atom-viewer/ldbcmecdchmhcjgboaagbiofojnjemhn (1.0.0 published 2026-11-16)
 
 Text and answers used in the Chrome Web Store developer dashboard. Images are in this folder; regenerate them with `node tools/store_assets.mjs`. Build the upload with `tools/package.sh`.
 

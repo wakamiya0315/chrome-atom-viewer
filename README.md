@@ -4,6 +4,8 @@
 
 A Chrome extension for viewing atomic structure files (`.xyz`, `.extxyz`, `.pdb`, `.cif`, `POSCAR`, …) on GitHub or any other web page in 3D, without downloading them. Right-click a file page or a link, and a viewer panel opens on the right or at the bottom of the page.
 
+**[Install from the Chrome Web Store →](https://chromewebstore.google.com/detail/atom-viewer/ldbcmecdchmhcjgboaagbiofojnjemhn)**
+
 <p align="center">
   <img src="store/screenshot-1-right-panel.png" width="100%" alt="Atom Viewer docked on the right of a GitHub file page, showing an Au38 nanoparticle on MgO(001)">
 </p>
@@ -18,7 +20,7 @@ A Chrome extension for viewing atomic structure files (`.xyz`, `.extxyz`, `.pdb`
 
 ## Install
 
-**From the Chrome Web Store:** [Atom Viewer](https://chromewebstore.google.com/detail/ldbcmecdchmhcjgboaagbiofojnjemhn). It is awaiting review, so the link works only once the listing is approved.
+**From the Chrome Web Store (recommended):** open [Atom Viewer](https://chromewebstore.google.com/detail/atom-viewer/ldbcmecdchmhcjgboaagbiofojnjemhn) and click **Add to Chrome**. Updates install automatically.
 
 **From source:**
 
